@@ -50,25 +50,25 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
     //console.log("emptyIndex", emptyIndex)
     const { row: emptyRow, col: emptyColumn } = toRowCol(emptyIndex); // deconstructes the emptyIndex to the tuple format 
     //console.log("desonstraced emptyIndex", { row: er, col: ec })
-    const { row: row, col: column } = toRowCol(index);
+    const { row: row, col: col } = toRowCol(index);
     //console.log("clicked tile", { row: r, col: c })
 
     // Only move if in same row or column
-    const dr = row - emptyRow; //calcaltes the difference from the clicked tile to the empty in the r(row)
-    const dc = column - emptyColumn; //calculates the difference from the clicked tile to the empty in the c(com)
-    if (dr !== 0 && dc !== 0) return; //if any of the constants above aren't 0 then it a diagonal nad the fuction is aborted
+    const diffRow = row - emptyRow; //calcaltes the difference from the clicked tile to the empty in the r(row)
+    const diffCol = col - emptyColumn; //calculates the difference from the clicked tile to the empty in the c(com)
+    if (diffRow !== 0 && diffCol !== 0) return; //if any of the constants above aren't 0 then it a diagonal nad the fuction is aborted
 
-    const distance = Math.abs(dr || dc); //turns negative values into positive using the abs function 
-    const changeRow = dr === 0 ? 0 : dr / distance;
-    const changeColumn = dc === 0 ? 0 : dc / distance;
+    const dist = Math.abs(diffRow || diffCol); //turns negative values into positive using the abs function 
+    const stepR = diffRow === 0 ? 0 : diffRow / dist;
+    const stepC = diffCol === 0 ? 0 : diffCol / dist;
 
     // Create new array to update
     const newTiles = [...tiles];
     let curEmpty = emptyIndex;
 
     // Slide intervening tiles
-    for (let i = 1; i <= distance; i++) {
-      const clickedIndex = (emptyRow + changeColumn * i) * size + (emptyColumn + changeRow * i);
+    for (let i = 1; i <= dist; i++) {
+      const clickedIndex = (emptyRow + stepR * i) * size + (emptyColumn + stepC * i);
       //console.log("distance", dist)
       //console.log("clickedIndex", clickedIndex)
       newTiles[curEmpty] = tiles[clickedIndex];
@@ -85,9 +85,15 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
     }
   };
 
+  const handleShuffle = () => {
+    setTiles(shuffle(Array.from({ length: size * size }, (_, i) => i)));
+  };
+
   
 
   return (
+    <div>
+  
     <div
       style={{
         display: 'grid',
@@ -116,6 +122,18 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
           {tile !== 0 ? tile : null}
         </div>
       ))}
+    </div>
+    <button
+        onClick={handleShuffle}
+        style={{
+          margin: '20px',
+          padding: '10px 20px',
+          fontSize: '1rem',
+          cursor: 'pointer'
+        }}
+      >
+        Shuffle
+      </button>
     </div>
   );
 };
