@@ -7,12 +7,12 @@
 
 
 .wireframe-div{
-  background-color: #888;
-  
-  display: flex;
-  width: 700px;
-  height: 300px;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-auto-rows: 100px;
+  gap: 4px;
+  width: max-content;
+  margin: 40px auto;
 }
 
 .button-slumpa{
@@ -25,10 +25,34 @@
   margin: 0 auto;
 }
 
-
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.5em;
+  user-select: none;
+}
 
 button p{
   margin: 0;
+}
+
+.congratulations{
+  position:absolute; 
+  top: 70px;
+  right: -20px;
+  width: 350px;
+  height: 100px;
+  background: #888;
+  opacity: 0.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  border-radius: 20px;
+  border: 2px solid black;
 }
 
 .card {

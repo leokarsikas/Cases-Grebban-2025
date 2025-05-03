@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 interface SlidingPuzzleProps {
-  size?: number;
+  rows?: number;
+  cols?: number;
 }
 
 function shuffle<T>(array: T[]): T[] {
@@ -22,12 +23,13 @@ function CheckList(tiles:number[]): boolean {
   return tiles[tiles.length -1 ] === 0;
 }
 
-const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
+const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 3, cols = 5 }) => {
   // Initialize tiles: numbers 1..size*size-1, with 0 representing the empty slot
+  const [solved, setSolved] = useState<boolean>(false);
   const [tiles, setTiles] = useState<number[]>(() => {
-    let list = Array.from({ length: size * size }, (_, i) => i + 1);
+    let list = Array.from({ length: rows * cols }, (_, i) => i + 1);
     console.log("list before shuffle", list)
-    list[size * size - 1] = 0;
+    list[rows * cols - 1] = 0;
     console.log("list reduction", list)
     list = shuffle(list)
     console.log("after shuffle", list )
@@ -37,8 +39,8 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
   });
   // Helper to compute row/col from index
   const toRowCol = (index: number) => ({
-    row: Math.floor(index / size),
-    col: index % size,
+    row: Math.floor(index / cols),
+    col: index % cols,
   });
 
   
@@ -68,7 +70,7 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
 
     // Slide intervening tiles
     for (let i = 1; i <= dist; i++) {
-      const clickedIndex = (emptyRow + stepR * i) * size + (emptyColumn + stepC * i);
+      const clickedIndex = (emptyRow + stepR * i) * cols + (emptyColumn + stepC * i);
       //console.log("distance", dist)
       //console.log("clickedIndex", clickedIndex)
       newTiles[curEmpty] = tiles[clickedIndex];
@@ -82,41 +84,35 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
 
     if (CheckList(newTiles)) {
       console.log("is solved");
+      setSolved(true)
     }
   };
 
   const handleShuffle = () => {
-    (shuffle(Array.from({ length: size * size }, (_, i) => i)));
+    setTiles(shuffle(Array.from({ length: rows * cols }, (_, i) => i)));
   };
 
   
 
   return (
-    <div>
-  
+    <div style={{position: "relative"}}>
+      {solved && <div className='congratulations'> Grattis! </div>}
     <div
+      className='wireframe-div'
       style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${size}, 100px)`,
-        gridAutoRows: '100px',
-        gap: '4px',
-        width: 'max-content',
-        margin: '40px auto',
+        aspectRatio: `${cols}/${rows}`, 
+        gridTemplateColumns: `repeat(${cols}, 100px)`,
       }}
     >
+      
       {tiles.map((tile, idx) => (
         <div
           key={idx}
           onClick={() => tile !== 0 && handleClick(idx)}
+          className='tile'
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
             background: tile === 0 ? 'transparent' : '#3498db',
-            color: 'white',
-            fontSize: '1.5em',
             cursor: tile === 0 ? 'default' : 'pointer',
-            userSelect: 'none',
           }}
         >
           {tile !== 0 ? tile : null}
