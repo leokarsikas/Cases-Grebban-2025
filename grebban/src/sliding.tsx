@@ -86,7 +86,7 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ size = 3 }) => {
   };
 
   const handleShuffle = () => {
-    setTiles(shuffle(Array.from({ length: size * size }, (_, i) => i)));
+    (shuffle(Array.from({ length: size * size }, (_, i) => i)));
   };
 
   
