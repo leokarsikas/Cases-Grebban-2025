@@ -23,7 +23,7 @@ function CheckList(tiles:number[]): boolean {
   return tiles[tiles.length -1 ] === 0;
 }
 
-const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 3, cols = 5 }) => {
+const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => {
   // Initialize tiles: numbers 1..size*size-1, with 0 representing the empty slot
   const [solved, setSolved] = useState<boolean>(false);
   const [tiles, setTiles] = useState<number[]>(() => {

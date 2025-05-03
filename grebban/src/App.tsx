@@ -1,13 +1,9 @@
-import { useState } from "react";
+
 import "./App.css";
 import SlidingPuzzle from "./sliding";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  const handleRandom = () => {
-    console.log("count", count)
-  };
+  
 
   return (
     <body>
