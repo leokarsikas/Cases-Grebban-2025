@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Path to data file
-const DATA_FILE = path.join(__dirname, 'data.json');
+const DATA_FILE = path.join(__dirname, './data/products.json');
 
 // Helper: read data from JSON file
 function readData() {
