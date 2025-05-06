@@ -136,10 +136,36 @@ app.get('/product', (req, res) => {
           
           // Create an object for each value
           values.forEach(value => {
-            if (value.trim()) {
+            const trimmedValue = value.trim();
+            if (trimmedValue) {
+              // Find the matching value in the metadata
+              const codeValue = attributeMeta.values.find(v => v.code === trimmedValue);
+              
+              let displayValue;
+              
+              // Special handling for hierarchical categories (with underscores)
+              if (attrKey === 'cat' && trimmedValue.split('_').length === 3) {
+                // For codes like cat_2_2, extract parent code (cat_2)
+                const parts = trimmedValue.split('_');
+                const parentCode = `${parts[0]}_${parts[1]}`;
+                
+                // Find both category names
+                const parentValue = attributeMeta.values.find(v => v.code === parentCode);
+                
+                if (parentValue && codeValue) {
+                  // Format as "Parent > Child"
+                  displayValue = `${parentValue.name} > ${codeValue.name}`;
+                } else {
+                  displayValue = codeValue ? codeValue.name : trimmedValue;
+                }
+              } else {
+                // Normal handling for non-hierarchical attributes
+                displayValue = codeValue ? codeValue.name : trimmedValue;
+              }
+              
               transformedAttributes.push({
                 name: attributeMeta.name, // Use friendly name from metadata
-                value: value.trim().charAt(0).toUpperCase() + value.trim().slice(1) // Capitalize first letter
+                value: displayValue
               });
             }
           });
