@@ -13,7 +13,6 @@
   gap: 4px;
   width: max-content;
   margin: 40px auto;
-  font-family: '';
 }
 
 .button-slumpa{
@@ -33,6 +32,7 @@
   color: white;
   font-size: 1.5em;
   user-select: none;
+  border-radius: 10px;
 }
 
 button p{
@@ -52,7 +52,7 @@ button p{
   align-items: center;
   color: white;
   font-size: 2rem;
-  border-radius: 20px;
+  border-radius: 15px;
   border: 2px solid black;
 }
 

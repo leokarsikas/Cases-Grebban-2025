@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-interface SlidingPuzzleProps {
+interface ReactNPuzzleProps {
   rows?: number;
   cols?: number;
 }
@@ -23,21 +23,26 @@ function CheckList(tiles:number[]): boolean {
   return tiles[tiles.length -1 ] === 0;
 }
 
-const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => {
-  // Initialize tiles: numbers 1..size*size-1, with 0 representing the empty slot
+
+/** For changing the dimentions of he game, to choose between the amount of rows and columns:
+ * 
+ * Change the values in the arguemnt of the props ({ rows = 2, cols = 3 })
+ * 
+ * Where you can insert the desired amount of rows and columns
+ */
+
+const ReactNPuzzle: React.FC<ReactNPuzzleProps> = ({ rows = 2, cols = 3 }) => {
+  
   const [solved, setSolved] = useState<boolean>(false);
   const [tiles, setTiles] = useState<number[]>(() => {
     let list = Array.from({ length: rows * cols }, (_, i) => i + 1);
-    console.log("list before shuffle", list)
     list[rows * cols - 1] = 0;
-    console.log("list reduction", list)
     list = shuffle(list)
-    console.log("after shuffle", list )
-    console.log("test shuffle", shuffle([1,2,3,4,5,6,7,8,0]))
     return list;
 
   });
-  // Helper to compute row/col from index
+  
+  // For calculating row and column
   const toRowCol = (index: number) => ({
     row: Math.floor(index / cols),
     col: index % cols,
@@ -49,11 +54,9 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => 
 
   const handleClick = (index: number) => {
     const emptyIndex = tiles.indexOf(0); //searches for the empty index through the list 
-    //console.log("emptyIndex", emptyIndex)
     const { row: emptyRow, col: emptyColumn } = toRowCol(emptyIndex); // deconstructes the emptyIndex to the tuple format 
-    //console.log("desonstraced emptyIndex", { row: er, col: ec })
-    const { row: row, col: col } = toRowCol(index);
-    //console.log("clicked tile", { row: r, col: c })
+    const { row: row, col: col } = toRowCol(index); // Every other tile
+    
 
     // Only move if in same row or column
     const diffRow = row - emptyRow; //calcaltes the difference from the clicked tile to the empty in the r(row)
@@ -61,8 +64,8 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => 
     if (diffRow !== 0 && diffCol !== 0) return; //if any of the constants above aren't 0 then it a diagonal nad the fuction is aborted
 
     const dist = Math.abs(diffRow || diffCol); //turns negative values into positive using the abs function 
-    const stepR = diffRow === 0 ? 0 : diffRow / dist;
-    const stepC = diffCol === 0 ? 0 : diffCol / dist;
+    const stepRow = diffRow === 0 ? 0 : diffRow / dist;
+    const stepCol = diffCol === 0 ? 0 : diffCol / dist;
 
     // Create new array to update
     const newTiles = [...tiles];
@@ -70,9 +73,7 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => 
 
     // Slide intervening tiles
     for (let i = 1; i <= dist; i++) {
-      const clickedIndex = (emptyRow + stepR * i) * cols + (emptyColumn + stepC * i);
-      //console.log("distance", dist)
-      //console.log("clickedIndex", clickedIndex)
+      const clickedIndex = (emptyRow + stepRow * i) * cols + (emptyColumn + stepCol * i);
       newTiles[curEmpty] = tiles[clickedIndex];
       curEmpty = clickedIndex;
     }
@@ -80,7 +81,6 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => 
     newTiles[curEmpty] = 0;
 
     setTiles(newTiles);
-    //console.log("setTiles", newTiles)
 
     if (CheckList(newTiles)) {
       console.log("is solved");
@@ -134,4 +134,4 @@ const SlidingPuzzle: React.FC<SlidingPuzzleProps> = ({ rows = 2, cols = 3 }) => 
   );
 };
 
-export default SlidingPuzzle;
+export default ReactNPuzzle;

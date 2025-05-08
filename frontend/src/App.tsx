@@ -1,6 +1,6 @@
 
 import "./App.css";
-import SlidingPuzzle from "./sliding";
+import ReactNPuzzle from "./sliding";
 
 function App() {
   
@@ -8,10 +8,8 @@ function App() {
   return (
     <body>
       <div >
-        <SlidingPuzzle/>
-
+        <ReactNPuzzle/>
       </div>
-      {/*<button className="button-slumpa" onClick={handleRandom}> <p> Slumpa</p></button>*/}
     </body>
   );
 }
