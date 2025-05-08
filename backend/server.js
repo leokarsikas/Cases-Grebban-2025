@@ -8,35 +8,6 @@ const PORT = 3003;
 
 app.use(express.json());
 
-// Path to data file
-/*
-const DATA_FILE = path.join(__dirname, './data/products.json');
-const META_FILE = path.join(__dirname, './data/attribute_meta.json');
-*/
-
-/*
-// Helper: read data from JSON file
-function readData() {
-  try {
-    const json = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(json);
-  } catch (err) {
-    if (err.code === 'ENOENT') return []; // file not found => empty list
-    throw err;
-  }
-}
-
-// Helper: read attribute meta data from JSON file
-function readMetaData() {
-  try {
-    const json = fs.readFileSync(META_FILE, 'utf8');
-    return JSON.parse(json);
-  } catch (err) {
-    if (err.code === 'ENOENT') return []; // file not found => empty list
-    throw err;
-  }
-
-  */
 
 const PRODUCTS_URL = 'https://draft.grebban.com/backend/products.json';
 const META_URL = 'https://draft.grebban.com/backend/attribute_meta.json';
@@ -62,11 +33,7 @@ async function fetchMetaData() {
 }
 
 
-function writeData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
-
-// GET /items - list items, optionally filtered by query parameters
+// GET /items - list items from product.json
 app.get('/items', async (req, res) => {
   try {
     const items = await fetchData();
@@ -76,7 +43,7 @@ app.get('/items', async (req, res) => {
   }
 });
 
-// GET /meta - list attribute metadata
+// GET /meta - list attribute metadata_attributes.json
 app.get('/meta', async(req, res) => {
   try {
     const meta = await fetchMetaData();
@@ -90,13 +57,12 @@ app.get('/meta', async(req, res) => {
 app.get('/product', async (req, res) => {
   const items = await fetchData();
   const meta = await fetchMetaData(); 
-
-  // Parse pagination params
-  const page = parseInt(req.query.page, 10) || 1; //extrating from query 
+  
+  const page = parseInt(req.query.page, 10); //extrating from query 
   const pageSize = parseInt(req.query.page_size, 10); //extrating from query 
   const totalItems = items.length;
   const totalPages = Math.ceil(totalItems / pageSize);
-  const start = (page - 1) * pageSize;
+  const start = (page - 1) * pageSize; //displaying the right items per page
   const end = page * pageSize;
 
   if(pageSize <= 0){
@@ -112,8 +78,8 @@ app.get('/product', async (req, res) => {
   }
 
   // Get paginated items and transform them
-  const paginatedItems = items.slice(start, end).map(product => {
-    // Create a copy of the product
+  const paginatedItems = items.slice(start, end).map(product => {  //choosess only products needed for this page
+    
     const transformedProduct = { ...product };
 
     /** At the moment this function is for the color */
@@ -186,4 +152,4 @@ app.listen(PORT, () => {
   console.log(`REST API listening on http://localhost:${PORT}`);
 });
 
-module.exports = app; 
+module.exports = app; //for tests

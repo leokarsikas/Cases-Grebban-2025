@@ -35,17 +35,17 @@ describe('GET /product', () => {
         }
     });
 
-    // Add this test to the existing describe block
+    
     it('calculates totalPages correctly based on pageSize', async () => {
         // First, get all products to determine the total count
         const allProductsResponse = await request(app).get('/items');
         const totalItemCount = allProductsResponse.body.length;
 
-        // Now test with different page sizes
-        const testPageSize = 5; // Choose a specific page size
+        
+        const testPageSize = 5; 
         const response = await request(app).get(`/product?page_size=${testPageSize}`);
 
-        // Calculate expected pages: ceiling of (total items / page size)
+        // Calculate expected pages
         const expectedTotalPages = Math.ceil(totalItemCount / testPageSize);
 
         expect(response.statusCode).toBe(200);
@@ -76,22 +76,16 @@ describe('GET /product', () => {
         console.log("productwithHierarchy", productWithHierarchy)
 
         if (productWithHierarchy && productWithHierarchy.attributess) {
-            // Get the raw category code (e.g., "cat_2_2")
+            // Get the raw category code, in this case ("cat_2_2")
             const categoryCode = productWithHierarchy.attributes.cat;
 
             // Parse parent and child codes
             const parts = categoryCode.split('_');
             const parentCode = `${parts[0]}_${parts[1]}`;
-
-            // Look up expected parent and child names from metadata
+            
             const parentValue = categoryMeta.values.find(v => v.code === parentCode);
             const childValue = categoryMeta.values.find(v => v.code === categoryCode);
 
-            console.log("parentCode", parentCode)
-            console.log("childCode", categoryCode)
-
-            console.log("parentValue", parentValue)
-            console.log("ChildValue", childValue)
             // Find the formatted category in the response
             const catAttribute = productWithHierarchy.attributess.find(
                 a => a.name === 'Category'
@@ -102,7 +96,7 @@ describe('GET /product', () => {
             expect(catAttribute).toBeDefined();
             expect(catAttribute.value).toBe(expectedFormat);
         } else {
-            // If no hierarchical categories found, mark test as skipped but don't fail
+            
             console.log('No hierarchical categories found in the first page of products');
         }
     });
