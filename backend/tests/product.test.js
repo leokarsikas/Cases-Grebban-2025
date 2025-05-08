@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server'); // Export the app from server.js
+const app = require('../serverLocal'); // Export the app from server.js
 const fs = require('fs');
 const path = require('path');
 
@@ -39,7 +39,7 @@ describe('GET /product', () => {
     const metadata = readMetaData();
     const categoryMeta = metadata.find(m => m.code === 'cat');
     const response = await request(app).get('/product');
-    console.log("metadata",response)
+    
     
     // Find a product with a hierarchical category (cat_X_Y format)
     const productWithHierarchy = response.body.products.find(p => {
