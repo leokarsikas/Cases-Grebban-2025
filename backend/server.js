@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = 3003;
 
-// Middleware to parse JSON bodies
+
 app.use(express.json());
 
 // Path to data file
@@ -93,11 +93,23 @@ app.get('/product', async (req, res) => {
 
   // Parse pagination params
   const page = parseInt(req.query.page, 10) || 1; //extrating from query 
-  const pageSize = parseInt(req.query.page_size, 10) || 10; //extrating from query 
+  const pageSize = parseInt(req.query.page_size, 10); //extrating from query 
   const totalItems = items.length;
   const totalPages = Math.ceil(totalItems / pageSize);
   const start = (page - 1) * pageSize;
   const end = page * pageSize;
+
+  if(pageSize <= 0){
+    return res.status(400).json({
+      error: "Invalid input: page_size must be an positive integer"
+    });
+  }
+
+  if(page < 0){
+    return res.status(400).json({
+      error: "Invalid input: page must be an positive integer"
+    });
+  }
 
   // Get paginated items and transform them
   const paginatedItems = items.slice(start, end).map(product => {
