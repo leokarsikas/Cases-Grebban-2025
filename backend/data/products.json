@@ -64,6 +64,14 @@
         }
     },
     {
+        "id": 3311138,
+        "name": "Test test",
+        "attributes": {
+            "cat": "cat_2_3,cat_2_2,cat_2_2",
+            "color": "blue,blue"
+        }
+    },
+    {
         "id": 12345,
         "name": "Random product",
         "attributes": {}
