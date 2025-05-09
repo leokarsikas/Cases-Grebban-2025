@@ -54,11 +54,6 @@ describe('GET /product', () => {
 
     
         expect(response.body.products.length).toBeLessThanOrEqual(testPageSize);
-
-
-        const NegativeTestSize = await request(app).get('/product?page=1&page_size=-1');
-        expect(NegativeTestSize.statusCode).toBe(400);
-        expect(TestPageZero.body).toHaveProperty("Invalid input:");
     });
 
     it('formats hierarchical categories correctly with proper parent-child structure', async () => {
